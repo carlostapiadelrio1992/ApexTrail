@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}¡Orden Confirmada! | ApexTrail TERREX{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto my-8">
+    <div class="p-8 sm:p-12 rounded-3xl border border-neutral-800 text-center relative overflow-hidden bg-cover bg-center shadow-2xl"
+         style="background-image: linear-gradient(to bottom, rgba(10, 10, 10, 0.94), rgba(10, 10, 10, 0.90)), url('{% static "images/backgrounds/torres_del_paine.jpg" %}');">
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Success Celebration Badge -->
+        <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-black text-4xl mx-auto mb-6 shadow-xl shadow-emerald-500/20 animate-bounce">
+            ✓
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
+                ¡Pago Aprobado y Registrado!
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900/80 text-neutral-300 border border-neutral-700 text-xs font-medium backdrop-blur-md">
+                📍 Torres del Paine, Patagonia Chilena
+            </span>
+        </div>
+
+
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-2">
+            ¡Gracias por tu compra, {{ order.first_name }}!
+        </h1>
+        <p class="text-neutral-400 text-base max-w-md mx-auto mb-8">
+            Tu pedido <strong class="text-amber-400 font-mono">#{{ order.id|stringformat:"05d" }}</strong> ha sido procesado con éxito y se encuentra en preparación para despacho.
+        </p>
+
+        <!-- Order Summary Box -->
+        <div class="bg-neutral-900/80 rounded-2xl p-6 border border-neutral-800 text-left mb-8 space-y-4">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-neutral-800 pb-2">
+                Detalles de Despacho
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                    <span class="text-neutral-500 block uppercase font-semibold">Destinatario</span>
+                    <span class="text-white font-bold text-sm">{{ order.first_name }} {{ order.last_name }}</span>
+                </div>
+                <div>
+                    <span class="text-neutral-500 block uppercase font-semibold">Correo de Notificación</span>
+                    <span class="text-white font-bold text-sm">{{ order.email }}</span>
+                </div>
+                <div>
+                    <span class="text-neutral-500 block uppercase font-semibold">Dirección de Entrega</span>
+                    <span class="text-white font-bold text-sm">{{ order.address }}, {{ order.city }}</span>
+                </div>
+                <div>
+                    <span class="text-neutral-500 block uppercase font-semibold">Método de Pago</span>
+                    <span class="text-amber-400 font-bold text-sm uppercase">{{ order.get_payment_method_display }}</span>
+                </div>
+            </div>
+
+            <!-- Items -->
+            <div class="border-t border-neutral-800 pt-4 mt-4">
+                <span class="text-xs text-neutral-500 uppercase font-semibold block mb-3">Productos Solicitados</span>
+                <div class="space-y-2">
+                    {% for item in order.items.all %}
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-white font-bold">{{ item.product.name }} <span class="text-neutral-400 font-normal">(EU {{ item.size }}) &times; {{ item.quantity }} un.</span></span>
+                            <span class="text-amber-400 font-bold">$ {{ item.get_cost|floatformat:0 }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="flex items-center justify-between text-base font-extrabold text-white border-t border-neutral-800 pt-3 mt-3">
+                    <span>Total Pagado</span>
+                    <span class="text-2xl font-black text-amber-400">$ {{ order.get_total_cost|floatformat:0 }}</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'store:product_list' %}" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-sm transition-all shadow-lg shadow-amber-500/10">
+            Volver a la Tienda Principal
+        </a>
+    </div>
+</div>
+{% endblock %}

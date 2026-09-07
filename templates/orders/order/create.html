@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout & Despacho | ApexTrail TERREX{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <!-- Checkout Header Banner with Cajón del Maipo Andes Background -->
+    <div class="relative overflow-hidden rounded-3xl p-6 sm:p-8 mb-8 border border-neutral-800 bg-cover bg-center shadow-2xl"
+         style="background-image: linear-gradient(to right, rgba(10, 10, 10, 0.92), rgba(10, 10, 10, 0.65)), url('{% static "images/backgrounds/cajon_del_maipo.jpg" %}');">
+        <div class="relative z-10">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
+                    🔒 Checkout Seguro ApexTrail
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900/80 text-neutral-300 border border-neutral-700 text-xs font-medium backdrop-blur-md">
+                    📍 Cajón del Maipo, Cordillera de los Andes
+                </span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Finalizar Pedido</h1>
+            <p class="text-neutral-300 text-sm mt-1">Ingresa tus datos de envío para procesar tu orden adidas TERREX hacia cualquier región de Chile.</p>
+        </div>
+    </div>
+
+    <form action="{% url 'orders:order_create' %}" method="post" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        {% csrf_token %}
+
+        <!-- Left Column: Shipping & Payment Form -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Shipping Information Box -->
+            <div class="glass-panel p-6 rounded-3xl border border-neutral-800">
+                <h3 class="text-lg font-bold text-white mb-4 border-b border-neutral-800 pb-3 flex items-center gap-2">
+                    <span>📦</span> Datos de Envío y Despacho
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Nombre</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Apellido</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Correo Electrónico</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Dirección Completa</label>
+                    {{ form.address }}
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Ciudad / Comuna</label>
+                        {{ form.city }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Código Postal (Opcional)</label>
+                        {{ form.postal_code }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Method Box -->
+            <div class="glass-panel p-6 rounded-3xl border border-neutral-800">
+                <h3 class="text-lg font-bold text-white mb-4 border-b border-neutral-800 pb-3 flex items-center gap-2">
+                    <span>💳</span> Método de Pago
+                </h3>
+
+                <div>
+                    <label class="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">Selecciona la Pasarela de Pago</label>
+                    {{ form.payment_method }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Order Summary -->
+        <div class="glass-panel p-6 rounded-3xl border border-neutral-800 h-fit space-y-6">
+            <h3 class="text-lg font-bold text-white border-b border-neutral-800 pb-3">Resumen de la Orden</h3>
+
+            <div class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                {% for item in cart %}
+                    <div class="flex items-center justify-between text-xs py-2 border-b border-neutral-800/60">
+                        <div>
+                            <span class="font-bold text-white block">{{ item.product.name }}</span>
+                            <span class="text-neutral-400">Talla EU {{ item.size }} &times; {{ item.quantity }} un.</span>
+                        </div>
+                        <span class="font-bold text-amber-400">$ {{ item.total_price|floatformat:0 }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="border-t border-neutral-800 pt-4 space-y-2 text-sm">
+                <div class="flex justify-between text-neutral-400">
+                    <span>Despacho</span>
+                    <span class="text-emerald-400 font-bold">GRATIS</span>
+                </div>
+                <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-neutral-800">
+                    <span>Total Final</span>
+                    <span class="text-2xl font-black text-amber-400">$ {{ cart.get_total_price|floatformat:0 }}</span>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-400 hover:to-red-400 text-black font-extrabold py-4 px-6 rounded-2xl shadow-xl shadow-amber-500/10 transition-all text-base">
+                Confirmar y Pagar Orden
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
