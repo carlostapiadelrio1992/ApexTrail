@@ -15,14 +15,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-apextrail-ocr-secret-key-change-in-production-2026')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.onrender.com', cast=Csv())
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,apextrail.onrender.com',
+    cast=Csv(),
+)
 CSRF_TRUSTED_ORIGINS = [
+    'https://apextrail.onrender.com',
     'https://*.onrender.com',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 INSTALLED_APPS = [
